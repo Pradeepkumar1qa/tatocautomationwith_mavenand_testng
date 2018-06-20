@@ -13,6 +13,8 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import junit.framework.Assert;
+
 public class Tatoc_with_Maven {
 	WebDriver driver;
 	ArrayList tabs;
@@ -23,17 +25,20 @@ public class Tatoc_with_Maven {
 		System.setProperty("webdriver.chrome.driver", "C:\\software\\chromedriver\\chromedriver.exe");
 		driver=new ChromeDriver();
 		driver.get("http://10.0.1.86/tatoc");
+		Assert.assertTrue(driver.getTitle().equals("Welcome - T.A.T.O.C"));
 		
 	}
 	@Test(dependsOnMethods={"oneTimeSetup"})
 	public void first_page_click_on_basic_course(){
 		driver.findElement(By.linkText("Basic Course")).click();
+		Assert.assertTrue(driver.findElement(By.tagName("h1")).getText().equals("Grid Gate"));
 		
 	} 
 	
 	@Test(dependsOnMethods={"first_page_click_on_basic_course"})
 	public void second_page_click_on_greenbox() {
 		driver.findElement(By.className("greenbox")).click();
+		Assert.assertTrue(driver.findElement(By.tagName("h1")).getText().equals("Frame Dungeon"));
 	}
 	
 	@Test(dependsOnMethods={"second_page_click_on_greenbox"})
@@ -47,6 +52,8 @@ public class Tatoc_with_Maven {
 		}
 		
 		driver.switchTo().parentFrame().findElement(By.linkText("Proceed")).click();
+		Assert.assertTrue(driver.findElement(By.tagName("h1")).getText().equals("Drag Around"));
+
 	}
 	
 	@Test(dependsOnMethods={"repaint_box2_until_it_matches_box1"},description="this function will do drag and drop testing")
@@ -56,7 +63,8 @@ public class Tatoc_with_Maven {
 		Actions act=new Actions(driver);
 		act.dragAndDrop(from, to).build().perform();
 		driver.findElement(By.linkText("Proceed")).click();
-		
+		Assert.assertTrue(driver.findElement(By.tagName("h1")).getText().equals("Popup Windows"));
+
 	}
 	
 	@Test(dependsOnMethods={"drag_and_drop"},description="to open popup window")
@@ -66,7 +74,8 @@ public class Tatoc_with_Maven {
         process_popup_and_returnto_main_page(1);
         driver.switchTo().window((String) tabs.get(0));
 		driver.findElement(By.linkText("Proceed")).click();
-		
+		Assert.assertTrue(driver.findElement(By.tagName("h1")).getText().equals("Cookie Handling"));
+
 	}
 	
 	@Test(dependsOnMethods={"launch_popup_window_and_go_to_next_page"})
@@ -77,6 +86,7 @@ public class Tatoc_with_Maven {
 		Cookie ck = new Cookie("Token", value);
 		driver.manage().addCookie(ck);
 		driver.findElement(By.linkText("Proceed")).click();
+		Assert.assertTrue(driver.findElement(By.className("finish")).getText().equals("End"));
 
 		
 	}
